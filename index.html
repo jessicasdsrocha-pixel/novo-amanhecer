@@ -1,0 +1,964 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Novo Amanhecer — Relógio de Oração | ADR4</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#2e302b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<style>
+:root{
+ --bg:#f6f4ef;--card:#fff;--ink:#20211f;--muted:#74766f;--line:#e7e3d9;
+ --accent:#7a6a4d;--accent2:#d9c7a3;--soft:#eee8dc;--green:#607d68;
+}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink)}
+button,input,textarea,select{font:inherit} button{cursor:pointer}
+.app{max-width:430px;margin:auto;min-height:100vh;background:var(--bg);box-shadow:0 0 30px #00000012}
+header{padding:22px 20px 14px;background:linear-gradient(145deg,#252923,#4b4a3e);color:white}
+.brand{font-size:12px;letter-spacing:2.5px;font-weight:800}.sub{font-size:11px;opacity:.7;margin-top:4px}
+main{padding:18px 16px 100px}.screen{display:none}.screen.active{display:block}
+h1{font-size:27px;line-height:1.12;margin:8px 0}.h2{font-size:18px;font-weight:800;margin:20px 0 10px}
+p{line-height:1.5}.muted{color:var(--muted)}.center{text-align:center}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 5px 20px #00000006}
+.hero{background:linear-gradient(145deg,#e8dfcf,#f8f4eb);border:0}
+.eyebrow{text-transform:uppercase;letter-spacing:1.8px;font-size:10px;font-weight:800;color:var(--accent)}
+.big{font-size:38px;font-weight:850;letter-spacing:-1px}.verse{font-family:Georgia,serif;font-size:17px;line-height:1.45}
+.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.stack{display:grid;gap:10px}
+.btn{border:0;border-radius:13px;padding:13px 16px;background:#2e302b;color:white;font-weight:750;width:100%}
+.btn.alt{background:var(--soft);color:var(--ink)}.btn.outline{background:white;color:var(--ink);border:1px solid var(--line)}
+.btn.small{width:auto;padding:9px 12px;font-size:12px}.link{border:0;background:none;padding:0;color:var(--accent);font-weight:750}
+input,textarea,select{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px;background:white;outline:none}
+textarea{min-height:120px;resize:vertical}
+label{display:block;font-size:12px;font-weight:750;margin:12px 0 6px}
+.pill{display:inline-flex;align-items:center;padding:6px 9px;border-radius:999px;background:var(--soft);font-size:11px;font-weight:750}
+.pill.live{background:#e4eee6;color:#46644e}.pill.busy{background:#eee7da;color:#6e5a36}
+.progress{height:8px;background:#e7e4dc;border-radius:99px;overflow:hidden}.progress>i{display:block;height:100%;width:35%;background:#7a6a4d}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);max-width:430px;width:100%;background:#fff;border-top:1px solid var(--line);display:flex;justify-content:space-around;padding:8px 4px 10px;z-index:10}
+.nav button{background:none;border:0;color:#777;font-size:10px;display:grid;gap:3px;justify-items:center}.nav button strong{font-size:18px;color:#34352f}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.slot{padding:10px 5px;border:1px solid var(--line);border-radius:11px;text-align:center;background:white;font-size:11px;cursor:pointer;transition:.15s}.slot:active{transform:scale(.98)}
+.slot.mine{background:#e9e1d1;border-color:#cdbd9e}.slot.busy{background:#e7eee9}.slot.free{color:#aaa}
+.list{display:grid;gap:8px}.person{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--line);border-radius:13px;background:white}
+.avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:#ded6c7;font-weight:800;font-size:12px}
+.check{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:13px}.check input{width:auto}
+.timeline{border-left:2px solid #ddd6ca;margin:12px 0;padding-left:14px}.timeline p{margin:4px 0 16px}
+.tag{font-size:10px;text-transform:uppercase;letter-spacing:1px;font-weight:800;color:var(--accent)}
+hr{border:0;border-top:1px solid var(--line);margin:15px 0}
+.notice{padding:11px 13px;border-radius:12px;background:#f1eee7;font-size:12px}
+.smalltext{font-size:12px}.success{background:#e8f0e9;border:1px solid #d1dfd3;border-radius:15px;padding:14px}
+.back{margin-bottom:12px}.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+<header>
+  <div class="brand">NOVO AMANHECER</div>
+  <div class="sub">RELÓGIO DE ORAÇÃO • ADR4</div>
+</header>
+<main>
+
+<section id="welcome" class="screen active">
+  <div class="center" style="padding-top:55px">
+    <div class="eyebrow">40 dias • 14/09 → 23/10/2026</div>
+    <h1>Um propósito.<br>Uma geração em oração.</h1>
+    <p class="muted">Um relógio de oração para caminharmos juntos, cada um no seu horário, mas com o mesmo propósito.</p>
+    <div class="card hero">
+      <div class="verse">“Orai sem cessar.”</div><div class="smalltext muted">1 Tessalonicenses 5:17</div>
+    </div>
+    <button class="btn" onclick="go('intro')">Começar</button>
+  </div>
+</section>
+
+<section id="intro" class="screen">
+  <button class="link back" onclick="go('welcome')">← Voltar</button>
+  <div class="eyebrow">Antes de começar</div><h1>Como vai funcionar?</h1>
+  <div class="card"><b>1. Escolha seu horário</b><p class="smalltext muted">Você assume um horário fixo de oração durante os 40 dias.</p></div>
+  <div class="card"><b>2. Uma hora por dia</b><p class="smalltext muted">Pode ser 1 hora seguida ou dois períodos de 30 minutos em horários diferentes.</p></div>
+  <div class="card"><b>3. Ore com a gente</b><p class="smalltext muted">Quando alguém estiver orando, o grupo poderá ver e entrar em “Orando junto”.</p></div>
+  <div class="card"><b>4. Compartilhe o que Deus fez</b><p class="smalltext muted">Depois da oração, registre uma reflexão ou testemunho quando quiser.</p></div>
+  <div class="notice">Os horários não precisam ficar todos preenchidos. O importante é assumir um compromisso possível e verdadeiro.</div>
+  <button class="btn" style="margin-top:14px" onclick="go('register')">Continuar</button>
+</section>
+
+<section id="register" class="screen">
+  <button class="link back" onclick="go('intro')">← Voltar</button>
+  <div class="eyebrow">Seu acesso</div><h1>Vamos te identificar</h1>
+  <label>Seu nome</label><input id="name" placeholder="Ex.: Ana Clara">
+  <p class="smalltext muted">Cada jovem terá seu próprio cadastro neste aparelho. Para trocar de pessoa depois, use “Trocar participante” em Meu espaço.</p>
+  <button class="btn" onclick="saveName()">Continuar</button>
+</section>
+
+<section id="choose" class="screen">
+  <button class="link back" onclick="go('register')">← Voltar</button>
+  <div class="eyebrow">Seu compromisso</div><h1>Escolha seu horário fixo</h1>
+  <p class="muted">Você terá <b>1 hora por dia</b>. Escolha uma opção:</p>
+  <div class="card">
+    <label><input type="radio" name="format" value="1h" checked onchange="toggleFormat()"> 1 hora seguida</label>
+    <label><input type="radio" name="format" value="30+30" onchange="toggleFormat()"> 30 + 30 minutos</label>
+  </div>
+  <div id="onehour"><label>Horário</label><select id="time1"></select></div>
+  <div id="split" class="hidden">
+    <label>1º período</label><select id="time2a"></select>
+    <label>2º período</label><select id="time2b"></select>
+  </div>
+  <div class="notice" style="margin-top:12px">Seu horário ficará reservado como seu compromisso diário. Se precisar alterar depois, você poderá solicitar a mudança.</div>
+  <button class="btn" style="margin-top:14px" onclick="confirmCommit()">Assumir compromisso</button>
+</section>
+
+<section id="confirm" class="screen">
+  <div class="center" style="padding-top:25px">
+    <div style="font-size:46px">✓</div><div class="eyebrow">Compromisso registrado</div>
+    <h1>Você faz parte do relógio.</h1>
+    <div class="card hero" id="commitmentCard"></div>
+    <p class="muted">De 14/09 a 23/10, seu horário será um pequeno altar diário de oração.</p>
+    <button class="btn" onclick="go('home')">Entrar no meu relógio</button>
+  </div>
+</section>
+
+<section id="home" class="screen">
+  <div class="row"><div><div class="eyebrow">Hoje • Dia 1 de 40</div><h1>Olá, <span id="homeName">jovem</span> 👋</h1></div><span class="pill live">● ao vivo</span></div>
+  <div class="card hero"><div class="eyebrow">Agora</div><div class="big" id="clock">19:30</div><div class="smalltext muted">2 pessoas estão orando</div><button id="joinCurrentBtn" class="btn" style="margin-top:12px" onclick="joinCurrentPrayer()">Estou orando junto</button></div>
+  <div class="h2">Próximo compromisso</div>
+  <div class="card"><div class="row"><div><b id="nextTime">21:00 – 22:00</b><div class="smalltext muted">Seu horário de oração</div></div><span class="pill busy">Hoje</span></div><hr><button class="link" onclick="go('commitment')">Ver meu compromisso →</button></div>
+  <div class="h2">Foco de hoje</div>
+  <div class="card"><div class="tag">Dia 1</div><h3>Consagração e entrega</h3><p class="smalltext muted">Ore para que cada jovem entregue este propósito a Deus e seja fortalecido no secreto.</p><button class="link" onclick="go('focus')">Ver foco completo →</button></div>
+  <div class="h2">Acontecendo agora</div>
+  <div class="list">
+    <div class="person"><span class="avatar">ML</span><div style="flex:1"><b>Maria Luiza</b><div class="smalltext muted">19:00 – 20:00</div></div><button class="btn small" onclick="go('active')">Orar junto</button></div>
+    <div class="person"><span class="avatar">JV</span><div style="flex:1"><b>João V.</b><div class="smalltext muted">19:30 – 20:00</div></div><span class="pill live">orando</span></div>
+  </div>
+</section>
+
+<section id="clockscreen" class="screen">
+  <div class="eyebrow">Relógio</div><h1>Quem está orando?</h1>
+  <p class="muted">Blocos de 30 minutos. Os espaços livres continuam disponíveis.</p>
+  <div class="card"><div class="row"><span class="pill mine">meu horário</span><span class="pill live">● orando agora</span><span class="pill">livre</span></div></div>
+  <div class="grid" id="slots"></div>
+</section>
+
+<section id="focus" class="screen">
+  <button class="link back" onclick="go('home')">← Início</button>
+  <div class="eyebrow">Dia 1 de 40</div><h1>Consagração e entrega</h1>
+  <div class="card hero"><div class="verse">“Ensina-nos a contar os nossos dias para que alcancemos corações sábios.”</div><p class="smalltext muted">Tema: começar estes 40 dias colocando tudo diante de Deus.</p></div>
+  <div class="h2">Ore por...</div>
+  <div class="card stack smalltext"><div>• Cada participante e sua vida com Deus</div><div>• Disciplina e constância durante os 40 dias</div><div>• Um coração sensível à voz do Espírito Santo</div><div>• Famílias, igreja ADR4 e liderança</div></div>
+  <div class="notice">A cada dia, o foco poderá mudar. O conteúdo é administrado pelo painel da liderança.</div>
+</section>
+
+<section id="active" class="screen">
+  <div class="center">
+    <button class="link back" onclick="go('home')">← Voltar</button>
+    <div class="eyebrow">Agora</div><h1>Você está orando</h1>
+    <div class="card hero"><div class="big" id="timer">30:00</div><div class="smalltext muted">Foco: Consagração e entrega</div><hr><span class="pill live" id="activeTogether">● 0 pessoas orando junto</span></div>
+    <p class="muted">Seu momento pode ser simples: fale com Deus, agradeça, interceda e permaneça em Sua presença.</p>
+    <div id="prayerStatus" class="success hidden"><b id="prayerStatusTitle">Oração iniciada.</b><p class="smalltext" id="prayerStatusText">Seu momento está aparecendo no relógio para o grupo.</p></div>
+    <button class="btn" id="startPrayerBtn" onclick="startPrayer()">Começar oração</button>
+    <button class="btn alt hidden" id="finishPrayerBtn" style="margin-top:8px" onclick="finishPrayer()">Concluir oração</button>
+  </div>
+</section>
+
+<section id="finish" class="screen">
+  <div class="center"><div style="font-size:44px">🙏</div><div class="eyebrow">Momento concluído</div><h1>Você esteve aqui.</h1></div>
+  <div class="success"><b>+ 30 min registrados</b><p class="smalltext">Seu momento de oração foi encerrado.</p></div>
+  <div class="h2">Como foi seu momento?</div>
+  <div class="card" id="reflectionChoices">
+    <label class="check"><input type="checkbox" value="Senti paz"> Senti paz</label>
+    <label class="check"><input type="checkbox" value="Deus falou comigo"> Deus falou comigo</label>
+    <label class="check"><input type="checkbox" value="Fui direcionado(a) a interceder"> Fui direcionado(a) a interceder</label>
+    <label class="check"><input type="checkbox" value="Quero continuar orando por este tema"> Quero continuar orando por este tema</label>
+  </div>
+  <button class="btn" onclick="saveReflectionAndContinue()">Registrar reflexão</button>
+  <button class="btn alt" style="margin-top:8px" onclick="go('home')">Voltar ao início</button>
+</section>
+
+<section id="testimonyNew" class="screen">
+  <button class="link back" onclick="go('finish')">← Voltar</button>
+  <div class="eyebrow">Compartilhe</div><h1>Um testemunho pode fortalecer alguém.</h1>
+  <label>O que você gostaria de registrar?</label><textarea id="testimonyText" placeholder="Escreva aqui o que Deus colocou no seu coração..."></textarea>
+  <label class="check"><input id="testimonyShared" type="checkbox" checked> Compartilhar com o grupo</label>
+  <button class="btn" onclick="saveTestimony()">Publicar testemunho</button>
+</section>
+
+<section id="testimonies" class="screen">
+  <div class="eyebrow">Comunidade</div><h1>Testemunhos</h1>
+  <div id="testimoniesList"><div class="notice">Carregando testemunhos...</div></div>
+  <button class="btn" onclick="go('testimonyNew')">+ Novo testemunho</button>
+</section>
+
+<section id="requests" class="screen">
+  <div class="eyebrow">Intercessão</div><h1>Pedidos de oração</h1>
+  <div id="requestsList"><div class="notice">Carregando pedidos...</div></div>
+  <button class="btn" onclick="go('requestNew')">+ Novo pedido</button>
+</section>
+
+<section id="requestNew" class="screen">
+  <button class="link back" onclick="go('requests')">← Voltar</button>
+  <div class="eyebrow">Novo pedido</div><h1>O que você quer colocar diante de Deus?</h1>
+  <label>Título</label><input id="requestTitle" placeholder="Ex.: Minha família">
+  <label>Pedido</label><textarea id="requestText" placeholder="Escreva seu pedido..."></textarea>
+  <label class="check"><input id="requestShared" type="checkbox" checked> Quero permitir que o grupo ore por este pedido</label>
+  <button class="btn" onclick="saveRequest()">Enviar pedido</button>
+</section>
+
+<section id="profile" class="screen">
+  <div class="eyebrow">Meu espaço</div><h1 id="profileName">Meu espaço</h1>
+  <div class="card" id="connectionCard">
+    <b>Conexão do relógio</b>
+    <p class="smalltext muted" id="connectionStatus">Conectando ao relógio...</p>
+  </div>
+  <div class="card"><b>Participante deste aparelho</b><p class="smalltext muted">Quer cadastrar outra pessoa neste mesmo computador ou celular?</p><button class="btn outline" onclick="switchParticipant()">Trocar participante</button></div>
+  <div class="card hero"><div class="tag">Meu compromisso</div><h3 id="profileTime">21:00 – 22:00</h3><p class="smalltext muted">14/09 → 23/10 • todos os dias</p><div class="progress"><i id="journeyProgress"></i></div><p class="smalltext"><span id="journeyDays">0</span> de 40 dias completos • <span id="journeyPercent">0%</span></p></div>
+  <div class="grid"><div class="card"><div class="big" id="daysCompleted" style="font-size:25px">0</div><div class="smalltext muted">dias concluídos</div></div><div class="card"><div class="big" id="joinedCount" style="font-size:25px">0</div><div class="smalltext muted">orações junto</div></div></div>
+  <div class="card"><b>Lembrete</b><p class="smalltext muted">Avisar 10 minutos antes do seu horário.</p><button id="notificationBtn" class="btn alt small" onclick="enableNotifications()">Ativar lembrete</button><p id="notificationStatus" class="smalltext muted"></p><button id="pushBtn" class="btn small hidden" onclick="enablePushNotifications()">Ativar notificações com o site fechado</button><p id="pushStatus" class="smalltext muted"></p></div>
+  <div class="card" id="installCard" style="display:none"><b>Instalar no celular</b><p class="smalltext muted">Adicione o Novo Amanhecer à tela inicial para abrir como um aplicativo.</p><button id="installBtn" class="btn alt small" onclick="installApp()">Instalar aplicativo</button></div>
+  <button class="btn outline" onclick="go('commitment')">Editar compromisso</button>
+</section>
+
+<section id="commitment" class="screen">
+  <button class="link back" onclick="go('profile')">← Meu espaço</button>
+  <div class="eyebrow">Meu compromisso</div><h1>Meu horário de oração</h1>
+  <div class="card hero"><div class="tag">Período</div><h3>14/09/2026 → 23/10/2026</h3><p class="smalltext muted">40 dias • 1 hora por dia</p></div>
+  <div class="card"><b>Horário atual</b><h2 id="commitTime">21:00 – 22:00</h2><p class="smalltext muted">Esse horário se repete diariamente.</p><button class="btn alt small" onclick="go('choose')">Solicitar alteração</button></div>
+  <div class="card"><b>Notificações</b><label class="check"><input id="notify10" type="checkbox" checked onchange="saveNotificationPrefs()"> 10 minutos antes</label><label class="check"><input id="notifyStart" type="checkbox" checked onchange="saveNotificationPrefs()"> Na hora de começar</label><label class="check"><input id="notifyReflection" type="checkbox" onchange="saveNotificationPrefs()"> Lembrete de reflexão</label><p class="smalltext muted">Você pode receber um aviso 10 minutos antes e outro na hora de começar. Com as notificações push ativadas, o aviso também pode chegar com o site fechado.</p></div>
+</section>
+
+<section id="admin" class="screen">
+  <div class="eyebrow">Liderança</div><h1>Painel do Relógio</h1><div class="notice">Área da liderança. O acesso administrativo deverá ser protegido no Supabase antes de compartilhar este painel com a equipe.</div>
+  <div class="grid">
+    <div class="card"><div class="big" style="font-size:25px">18</div><div class="smalltext muted">participantes</div></div>
+    <div class="card"><div class="big" style="font-size:25px">67%</div><div class="smalltext muted">compromissos ativos</div></div>
+    <div class="card"><div class="big" style="font-size:25px">43</div><div class="smalltext muted">orações hoje</div></div>
+    <div class="card"><div class="big" style="font-size:25px">12</div><div class="smalltext muted">pedidos ativos</div></div>
+  </div>
+  <div class="h2">Atalhos</div>
+  <div class="stack"><button class="btn" onclick="go('participants')">Participantes</button><button class="btn alt" onclick="go('themes')">Focos de oração</button><button class="btn alt" onclick="go('finale')">Resumo dos 40 dias</button></div>
+</section>
+
+<section id="participants" class="screen">
+  <button class="link back" onclick="go('admin')">← Painel</button>
+  <div class="eyebrow">Administração</div><h1>Participantes</h1>
+  <div class="list">
+    <div class="person"><span class="avatar">AC</span><div style="flex:1"><b>Ana Clara</b><div class="smalltext muted">21:00–22:00 • 92% presença</div></div><span class="pill live">ativo</span></div>
+    <div class="person"><span class="avatar">ML</span><div style="flex:1"><b>Maria Luiza</b><div class="smalltext muted">19:00–20:00 • 86% presença</div></div><span class="pill live">ativo</span></div>
+    <div class="person"><span class="avatar">JV</span><div style="flex:1"><b>João V.</b><div class="smalltext muted">19:30–20:30 • 74% presença</div></div><span class="pill">ativo</span></div>
+  </div>
+</section>
+
+<section id="themes" class="screen">
+  <button class="link back" onclick="go('admin')">← Painel</button>
+  <div class="eyebrow">Administração</div><h1>Focos dos 40 dias</h1>
+  <div class="timeline">
+    <p><b>Dia 1 — Consagração e entrega</b><br><span class="smalltext muted">Começar colocando o propósito diante de Deus.</span></p>
+    <p><b>Dia 2 — Famílias</b><br><span class="smalltext muted">Interceder pelas casas e relacionamentos.</span></p>
+    <p><b>Dia 3 — Igreja ADR4</b><br><span class="smalltext muted">Clamar por unidade, serviço e avivamento.</span></p>
+    <p><b>Dia 4 — Juventude</b><br><span class="smalltext muted">Clamar por uma geração firme na fé.</span></p>
+  </div>
+  <button class="btn" onclick="alert('No sistema real, aqui a liderança poderá criar, editar e programar os 40 focos.')">+ Novo foco</button>
+</section>
+
+<section id="finale" class="screen">
+  <div class="center"><div class="eyebrow">Encerramento</div><h1>40 dias vividos em oração.</h1></div>
+  <div class="card hero"><div class="big">40</div><p class="muted">dias de propósito</p><hr><div class="row"><span>orações registradas</span><b>1.248</b></div><div class="row"><span>orações junto</span><b>327</b></div><div class="row"><span>testemunhos</span><b>54</b></div></div>
+  <div class="card"><b>O que fica?</b><p class="smalltext muted">Mais do que preencher horários, a proposta é terminar os 40 dias com uma geração que aprendeu a permanecer em oração.</p></div>
+  <button class="btn" onclick="go('home')">Voltar ao relógio</button>
+</section>
+
+</main>
+
+<nav class="nav">
+  <button onclick="go('home')"><strong>⌂</strong>Início</button>
+  <button onclick="go('clockscreen')"><strong>◷</strong>Relógio</button>
+  <button onclick="go('focus')"><strong>✦</strong>Foco</button>
+  <button onclick="go('testimonies')"><strong>♡</strong>Testemunhos</button>
+  <button onclick="go('profile')"><strong>◉</strong>Meu espaço</button>
+</nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+let userName=localStorage.getItem('na_user_name') || '', chosen=localStorage.getItem('na_chosen_time') || '', format=localStorage.getItem('na_format') || '1h';
+let supabaseClient = null;
+const SUPABASE_URL = 'https://uclxlnijeqztcgcmgfzl.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_PU_a8-6JVuips92NPA2CVA_8Qhn8ItH';
+const VAPID_PUBLIC_KEY = 'BHO3Nwp9aocq5FzODy_6EWA2UVqLsQdN9G9Zen7MRE-RFW7nsSqxIvIkYUfczVOM0X2EOlg0QE14GjQG2AiTjU8';
+let currentParticipantId = localStorage.getItem('na_participante_id') || null;
+let currentCommitmentId = localStorage.getItem('na_compromisso_id') || null;
+let currentPrayerId = null;
+let lastCompletedPrayerId = null;
+let prayerStartedAt = null;
+let prayerTimer = null;
+
+function updateConnectionStatus(message, ok=false){
+  const el=document.getElementById('connectionStatus');
+  if(el){ el.textContent=message; el.style.color=ok ? 'var(--green)' : 'var(--muted)'; }
+}
+
+async function connectSupabase(){
+  try{
+    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    let sessionResult=await supabaseClient.auth.getSession();
+    let uid=sessionResult.data?.session?.user?.id;
+    if(!uid){
+      const auth=await supabaseClient.auth.signInAnonymously();
+      if(auth.error) throw auth.error;
+      uid=auth.data?.user?.id;
+    }
+    if(uid && !currentParticipantId){
+      const mine=await supabaseClient.from('participantes').select('id,nome').eq('auth_user_id',uid).limit(1).maybeSingle();
+      if(mine.data?.id){ currentParticipantId=mine.data.id; localStorage.setItem('na_participante_id',currentParticipantId); userName=mine.data.nome||userName; }
+    }
+    const test=await supabaseClient.from('orando_agora').select('nome,pessoas_orando_junto').limit(10);
+    if(test.error) throw test.error;
+    updateConnectionStatus('✓ Conectado ao relógio.',true);
+    loadNotificationPrefs();
+    updatePushUI();
+    await loadMyCommitment();
+  }catch(e){
+    supabaseClient=null;
+    updateConnectionStatus('Não foi possível conectar ao relógio.');
+    console.error(e);
+  }
+}
+
+async function initSupabase(){
+  try{
+    supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+    let sessionResult=await supabaseClient.auth.getSession();
+    let uid=sessionResult.data?.session?.user?.id;
+    if(!uid){
+      const auth=await supabaseClient.auth.signInAnonymously();
+      if(auth.error) throw auth.error;
+      uid=auth.data?.user?.id;
+    }
+    if(uid && !currentParticipantId){
+      const mine=await supabaseClient.from('participantes').select('id,nome').eq('auth_user_id',uid).limit(1).maybeSingle();
+      if(mine.data?.id){ currentParticipantId=mine.data.id; localStorage.setItem('na_participante_id',currentParticipantId); userName=mine.data.nome||userName; }
+    }
+    const test=await supabaseClient.from('orando_agora').select('nome,pessoas_orando_junto').limit(10);
+    if(test.error) throw test.error;
+    updateConnectionStatus('✓ Conectado ao relógio.',true);
+    loadNotificationPrefs();
+    updatePushUI();
+    await loadMyCommitment();
+  }catch(e){
+    updateConnectionStatus('Não foi possível conectar ao relógio.');
+    console.error(e);
+  }
+}
+
+async function loadMyCommitment(){
+  if(!supabaseClient || !currentParticipantId) return;
+  try{
+    const {data:c,error}=await supabaseClient.from('compromissos')
+      .select('id,tipo,inicio_validade,fim_validade,ativo')
+      .eq('participante_id',currentParticipantId)
+      .eq('ativo',true)
+      .order('criado_em',{ascending:false})
+      .limit(1).maybeSingle();
+    if(error) throw error;
+    if(!c){
+      currentCommitmentId=null;
+      localStorage.removeItem('na_compromisso_id');
+      return;
+    }
+    currentCommitmentId=c.id;
+    localStorage.setItem('na_compromisso_id',c.id);
+    const {data:hs,error:he}=await supabaseClient.from('horarios')
+      .select('inicio,fim,ordem').eq('compromisso_id',c.id).order('ordem');
+    if(he) throw he;
+    const periods=(hs||[]).map(h=>String(h.inicio).slice(0,5)+' – '+String(h.fim).slice(0,5));
+    if(periods.length){
+      chosen=periods.join(' + ');
+      format=c.tipo==='1h'?'1h':'30+30';
+      localStorage.setItem('na_chosen_time',chosen);
+      localStorage.setItem('na_format',format);
+      ['commitmentCard','profileTime','commitTime','commitTime2','nextTime'].forEach(id=>{
+        const e=document.getElementById(id); if(e) e.textContent=chosen;
+      });
+      const home=document.getElementById('nextTime'); if(home) home.textContent=chosen;
+      const pf=document.getElementById('profileName'); if(pf) pf.textContent=userName||'Meu espaço';
+      const hn=document.getElementById('homeName'); if(hn) hn.textContent=(userName||'Jovem').split(' ')[0];
+    }
+    await loadMyStats();
+    renderSlots();
+  }catch(e){ console.log('Não foi possível carregar seu compromisso:',e.message||e); }
+}
+
+async function loadMyStats(){
+  if(!supabaseClient || !currentParticipantId) return;
+  try{
+    const [pr,jj]=await Promise.all([
+      supabaseClient.from('oracoes').select('id,inicio_real,fim_real,status').eq('participante_id',currentParticipantId).eq('status','concluida'),
+      supabaseClient.from('orando_junto').select('id').eq('participante_id',currentParticipantId)
+    ]);
+    if(pr.error) throw pr.error;
+    if(jj.error) throw jj.error;
+
+    // Um dia conta como concluído quando existe pelo menos uma oração
+    // própria concluída naquele dia. Para compromissos 30+30, os dois
+    // blocos do mesmo dia continuam contando como um único dia.
+    const dates=new Set((pr.data||[])
+      .map(x=>x.fim_real ? new Date(x.fim_real).toLocaleDateString('en-CA') : null)
+      .filter(Boolean));
+    const days=Math.min(40,dates.size);
+    const percent=Math.round((days/40)*100);
+    const d=document.getElementById('daysCompleted'); if(d) d.textContent=days;
+    const j=document.getElementById('joinedCount'); if(j) j.textContent=(jj.data||[]).length;
+    const journeyDays=document.getElementById('journeyDays'); if(journeyDays) journeyDays.textContent=days;
+    const journeyPercent=document.getElementById('journeyPercent'); if(journeyPercent) journeyPercent.textContent=percent+'%';
+    const progress=document.getElementById('journeyProgress'); if(progress) progress.style.width=percent+'%';
+  }catch(e){ console.log('Não foi possível carregar seus números:',e.message||e); }
+}
+
+function loadNotificationPrefs(){
+  try{
+    const p=JSON.parse(localStorage.getItem('na_notification_prefs')||'{}');
+    ['notify10','notifyStart','notifyReflection'].forEach(id=>{
+      const e=document.getElementById(id); if(e && p[id]!==undefined) e.checked=!!p[id];
+    });
+    updateNotificationUI();
+  }catch(e){}
+}
+function saveNotificationPrefs(){
+  const p={};
+  ['notify10','notifyStart','notifyReflection'].forEach(id=>{
+    const e=document.getElementById(id); if(e) p[id]=e.checked;
+  });
+  localStorage.setItem('na_notification_prefs',JSON.stringify(p));
+}
+async function enableNotifications(){
+  if(!('Notification' in window)){
+    alert('Seu navegador não oferece notificações web neste momento.');
+    return;
+  }
+  try{
+    const permission=await Notification.requestPermission();
+    if(permission==='granted'){
+      localStorage.setItem('na_notifications_enabled','1');
+      updateNotificationUI();
+      new Notification('Novo Amanhecer', {body:'Lembretes de oração ativados neste aparelho.'});
+    }else{
+      localStorage.removeItem('na_notifications_enabled');
+      updateNotificationUI();
+      alert('As notificações não foram autorizadas. Você pode permitir nas configurações do navegador.');
+    }
+  }catch(e){ alert('Não foi possível ativar o lembrete neste aparelho.'); }
+}
+function updateNotificationUI(){
+  const b=document.getElementById('notificationBtn'), st=document.getElementById('notificationStatus');
+  const enabled=localStorage.getItem('na_notifications_enabled')==='1' && ('Notification' in window) && Notification.permission==='granted';
+  if(b) b.textContent=enabled?'Lembretes ativados ✓':'Ativar lembrete';
+  if(st) st.textContent=enabled?'Permissão de notificação concedida neste aparelho.':'';
+  updatePushUI();
+}
+
+
+
+function urlBase64ToUint8Array(base64String){
+  const padding='='.repeat((4-base64String.length%4)%4);
+  const base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
+  const raw=atob(base64); const output=new Uint8Array(raw.length);
+  for(let i=0;i<raw.length;i++) output[i]=raw.charCodeAt(i);
+  return output;
+}
+async function enablePushNotifications(){
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)){
+    alert('Este navegador não oferece notificações push neste momento.'); return;
+  }
+  if(!supabaseClient || !currentParticipantId){
+    alert('Seu cadastro ainda não está conectado. Abra Meu espaço novamente e tente outra vez.'); return;
+  }
+  try{
+    const permission = Notification.permission==='granted' ? 'granted' : await Notification.requestPermission();
+    if(permission!=='granted'){ alert('Permissão de notificação não autorizada.'); return; }
+    const reg=await navigator.serviceWorker.register('./sw.js');
+    const existing=await reg.pushManager.getSubscription();
+    const sub=existing || await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(VAPID_PUBLIC_KEY)});
+    const json=sub.toJSON();
+    const {error}=await supabaseClient.from('notificacoes_push').upsert({
+      participante_id:currentParticipantId,
+      endpoint:json.endpoint,
+      p256dh:json.keys?.p256dh || '',
+      auth:json.keys?.auth || '',
+      ativo:true,
+      atualizado_em:new Date().toISOString()
+    },{onConflict:'endpoint'});
+    if(error) throw error;
+    localStorage.setItem('na_push_enabled','1');
+    updatePushUI();
+    alert('Notificações push ativadas! Agora o Novo Amanhecer poderá avisar você mesmo com o app fechado.');
+  }catch(e){ console.error(e); alert('Não foi possível ativar as notificações push agora: '+(e.message||e)); }
+}
+function updatePushUI(){
+  const btn=document.getElementById('pushBtn'), st=document.getElementById('pushStatus');
+  if(!btn) return;
+  const enabled=localStorage.getItem('na_push_enabled')==='1';
+  btn.classList.toggle('hidden',enabled);
+  if(st) st.textContent=enabled?'Notificações push ativadas neste aparelho.':'';
+}
+
+async function switchParticipant(){
+  if(!confirm('Trocar participante neste aparelho? O cadastro atual continuará salvo no Supabase.')) return;
+  try{ if(supabaseClient) await supabaseClient.auth.signOut(); }catch(e){ console.log(e); }
+  localStorage.removeItem('na_user_name');
+  localStorage.removeItem('na_chosen_time');
+  localStorage.removeItem('na_participante_id');
+  localStorage.removeItem('na_compromisso_id');
+  localStorage.removeItem('na_chosen_time');
+  localStorage.removeItem('na_format');
+  currentParticipantId=null; currentCommitmentId=null; currentPrayerId=null; prayerStartedAt=null;
+  location.reload();
+}
+
+function go(id){
+ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+ const el=document.getElementById(id); if(el) el.classList.add('active');
+ window.scrollTo({top:0,behavior:'smooth'});
+ if(id==='testimonies') loadTestimonies();
+ if(id==='requests') loadRequests();
+}
+
+async function ensureParticipant(){
+  if(!supabaseClient) return null;
+  if(currentParticipantId) return currentParticipantId;
+  const session=await supabaseClient.auth.getSession();
+  const uid=session.data?.session?.user?.id;
+  if(!uid) return null;
+  const existing=await supabaseClient.from('participantes').select('id,nome').eq('auth_user_id',uid).limit(1).maybeSingle();
+  if(existing.error) throw existing.error;
+  if(existing.data?.id){
+    currentParticipantId=existing.data.id;
+    if(userName && existing.data.nome!==userName){
+      const upd=await supabaseClient.from('participantes').update({nome:userName}).eq('id',existing.data.id);
+      if(upd.error) throw upd.error;
+    }
+  }else{
+    const code='NA-'+crypto.randomUUID().slice(0,8).toUpperCase();
+    const created=await supabaseClient.from('participantes').insert({nome:userName,codigo_acesso:code,auth_user_id:uid,ativo:true}).select('id').single();
+    if(created.error) throw created.error;
+    currentParticipantId=created.data.id;
+  }
+  localStorage.setItem('na_participante_id',currentParticipantId);
+  if(currentCommitmentId) localStorage.removeItem('na_compromisso_id');
+  return currentParticipantId;
+}
+
+async function saveName(){
+ const v=document.getElementById('name').value.trim();
+ if(!v){ alert('Digite seu nome para continuar.'); return; }
+ userName=v;
+ localStorage.setItem('na_user_name',userName);
+ document.getElementById('homeName').textContent=userName.split(' ')[0];
+ document.getElementById('profileName').textContent=userName;
+ if(supabaseClient){
+   try{ await ensureParticipant(); }
+   catch(e){ alert('Não consegui salvar seu cadastro no banco: '+(e.message||e)); return; }
+ }
+ go('choose');
+}
+function toggleFormat(){
+ format=document.querySelector('input[name=format]:checked').value;
+ localStorage.setItem('na_format',format);
+ document.getElementById('onehour').classList.toggle('hidden',format!=='1h');
+ document.getElementById('split').classList.toggle('hidden',format!=='30+30');
+}
+async function refreshLivePrayer(){
+  if(!supabaseClient) return;
+  try{
+    const liveRes=await supabaseClient.from('orando_agora').select('nome,pessoas_orando_junto,inicio_real,oracao_id,participante_id').limit(20);
+    if(liveRes.error) return;
+    const live=liveRes.data||[];
+    const countEl=document.querySelector('#home .card.hero .smalltext.muted');
+    if(countEl) countEl.textContent=live.length+' '+(live.length===1?'pessoa está':'pessoas estão')+' orando';
+    const activeMine=live.find(r=>r.participante_id===currentParticipantId);
+    if(activeMine && !currentPrayerId){ currentPrayerId=activeMine.oracao_id; prayerStartedAt=activeMine.inicio_real; showActiveState(true); }
+    const togetherEl=document.getElementById('activeTogether');
+    if(togetherEl && activeMine) togetherEl.textContent='● '+(activeMine.pessoas_orando_junto||0)+' pessoas orando junto';
+    const joinCurrentBtn=document.getElementById('joinCurrentBtn');
+    if(joinCurrentBtn){
+      joinCurrentBtn.style.display = activeMine ? 'none' : (live.length ? '' : 'none');
+    }
+    const liveList=document.querySelector('#home .list');
+    if(liveList){
+      liveList.innerHTML=live.length ? live.map(r=>{
+        const initials=(r.nome||'Jovem').split(' ').slice(0,2).map(x=>x[0]).join('').toUpperCase();
+        const t=new Date(r.inicio_real).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+        const isMine = r.participante_id === currentParticipantId;
+        const action = isMine ? '<span class="pill live">você está orando</span>' : '<button class="btn small" onclick="joinSpecificPrayer(\''+r.oracao_id+'\')">Orar junto</button>';
+        return '<div class="person"><span class="avatar">'+initials+'</span><div style="flex:1"><b>'+r.nome+'</b><div class="smalltext muted">desde '+t+'</div></div>'+action+'</div>';
+      }).join('') : '<div class="notice">Ninguém está orando neste momento. Em breve, este espaço será preenchido pelo grupo.</div>';
+    }
+    // Carrega os compromissos diretamente das tabelas reais, sem depender de uma view.
+    const [horRes, comRes] = await Promise.all([
+      supabaseClient.from('horarios').select('inicio,fim,compromisso_id'),
+      supabaseClient.from('compromissos').select('id,participante_id,ativo').eq('ativo',true)
+    ]);
+    if(!horRes.error && !comRes.error){
+      const validCommitments=new Map((comRes.data||[]).map(c=>[c.id,c]));
+      const counts=new Map();
+      (horRes.data||[]).forEach(h=>{
+        const c=validCommitments.get(h.compromisso_id);
+        if(!c) return;
+        const st=String(h.inicio||'').slice(0,5);
+        if(st) counts.set(st,(counts.get(st)||0)+1);
+      });
+      renderSlots(Array.from(counts.entries()).map(([inicio,participantes_comprometidos])=>({inicio,participantes_comprometidos})));
+    } else {
+      console.log('Não foi possível carregar compromissos do relógio:',horRes.error||comRes.error);
+    }
+  }catch(e){ console.log('Atualização do relógio:',e.message||e); }
+}
+async function joinSpecificPrayer(prayerId){
+  if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
+  try{
+    await ensureParticipant();
+    const {data:live,error}=await supabaseClient.from('oracoes').select('id,participante_id,inicio_real').eq('id',prayerId).eq('status','orando').maybeSingle();
+    if(error) throw error;
+    if(!live){ alert('Essa oração não está mais ativa.'); await refreshLivePrayer(); return; }
+    if(live.participante_id === currentParticipantId){ alert('Essa é a sua própria oração. Você já está orando por ela.'); return; }
+    const joined=await supabaseClient.from('orando_junto').insert({oracao_id:live.id,participante_id:currentParticipantId});
+    if(joined.error && !String(joined.error.message||'').toLowerCase().includes('duplicate')) throw joined.error;
+    // Uma oração de outra pessoa não é a oração do participante atual.
+    // Mantemos o ID separado para não exibir o botão de conclusão indevidamente.
+    currentPrayerId=null; prayerStartedAt=live.inicio_real;
+    const st=document.getElementById('prayerStatus'), title=document.getElementById('prayerStatusTitle'), text=document.getElementById('prayerStatusText');
+    if(st) st.classList.remove('hidden'); if(title) title.textContent='Você entrou em oração junto.'; if(text) text.textContent='Você está acompanhando uma oração ativa do grupo.';
+    document.getElementById('startPrayerBtn')?.classList.add('hidden'); document.getElementById('finishPrayerBtn')?.classList.add('hidden');
+    go('active'); await refreshLivePrayer();
+  }catch(e){ alert('Não foi possível entrar em oração junto: '+(e.message||e)); }
+}
+function showActiveState(started){
+  const startBtn=document.getElementById('startPrayerBtn'), finishBtn=document.getElementById('finishPrayerBtn'), status=document.getElementById('prayerStatus');
+  if(startBtn) startBtn.classList.toggle('hidden',started);
+  if(finishBtn) finishBtn.classList.toggle('hidden',!started);
+  if(status) status.classList.toggle('hidden',!started);
+  if(started && prayerStartedAt){
+    const start=new Date(prayerStartedAt).getTime();
+    if(prayerTimer) clearInterval(prayerTimer);
+    const tick=()=>{ const elapsed=Math.max(0,Math.floor((Date.now()-start)/1000)); const remaining=Math.max(0,1800-elapsed); const m=String(Math.floor(remaining/60)).padStart(2,'0'), ss=String(remaining%60).padStart(2,'0'); const t=document.getElementById('timer'); if(t)t.textContent=m+':'+ss; };
+    tick(); prayerTimer=setInterval(tick,1000);
+  }
+}
+async function joinCurrentPrayer(){
+  if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
+  try{
+    const {data:live,error}=await supabaseClient.from('orando_agora').select('oracao_id').limit(1).maybeSingle();
+    if(error) throw error;
+    if(!live?.oracao_id){ alert('Não há uma oração ativa para entrar junto neste momento.'); return; }
+    await joinSpecificPrayer(live.oracao_id);
+  }catch(e){ alert('Não foi possível entrar em oração junto: '+(e.message||e)); }
+}
+async function startPrayer(){
+  if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
+  if(!currentParticipantId){
+    const session=await supabaseClient.auth.getSession(); const uid=session.data?.session?.user?.id;
+    if(uid){ const mine=await supabaseClient.from('participantes').select('id').eq('auth_user_id',uid).limit(1).maybeSingle(); currentParticipantId=mine.data?.id||null; }
+  }
+  if(!currentParticipantId){ alert('Não encontrei seu cadastro. Volte e faça o cadastro novamente.'); return; }
+  if(!currentCommitmentId){ alert('Seu compromisso ainda não foi registrado. Escolha seu horário primeiro.'); return; }
+  const {data,error}=await supabaseClient.from('oracoes').insert({participante_id:currentParticipantId,compromisso_id:currentCommitmentId,inicio_real:new Date().toISOString(),status:'orando'}).select('id,inicio_real').single();
+  if(error){ alert('Não foi possível iniciar a oração agora: '+error.message); return; }
+  currentPrayerId=data.id; prayerStartedAt=data.inicio_real; showActiveState(true); await refreshLivePrayer();
+}
+async function finishPrayer(){
+  if(!supabaseClient || !currentPrayerId){ go('finish'); return; }
+  const completedId=currentPrayerId;
+  const {error}=await supabaseClient.from('oracoes').update({status:'concluida',fim_real:new Date().toISOString()}).eq('id',completedId);
+  if(error){ alert('A oração começou, mas não consegui encerrá-la no banco: '+error.message); return; }
+  lastCompletedPrayerId=completedId;
+  currentPrayerId=null; prayerStartedAt=null; if(prayerTimer) clearInterval(prayerTimer); showActiveState(false); go('finish'); await refreshLivePrayer();
+}
+
+
+async function loadTestimonies(){
+  const el=document.getElementById('testimoniesList'); if(!el) return;
+  if(!supabaseClient){ el.innerHTML='<div class="notice">Conecte o relógio ao banco para carregar os testemunhos.</div>'; return; }
+  try{
+    const {data,error}=await supabaseClient.from('testemunhos').select('id,participante_id,texto,compartilhado,criado_em').eq('compartilhado',true).order('criado_em',{ascending:false}).limit(20);
+    if(error) throw error;
+    const rows=data||[];
+    if(!rows.length){ el.innerHTML='<div class="notice">Ainda não há testemunhos compartilhados.</div>'; return; }
+    const ids=[...new Set(rows.map(r=>r.participante_id).filter(Boolean))];
+    let names={};
+    if(ids.length){ const pr=await supabaseClient.from('participantes').select('id,nome').in('id',ids); (pr.data||[]).forEach(p=>names[p.id]=p.nome); }
+    el.innerHTML=rows.map(r=>{
+      const who=names[r.participante_id]||'Jovem';
+      const when=r.criado_em?new Date(r.criado_em).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):'';
+      const text=String(r.texto||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return '<div class="card"><b>“'+text+'”</b><p class="smalltext muted">'+who+' • '+when+'</p></div>';
+    }).join('');
+  }catch(e){ el.innerHTML='<div class="notice">Não consegui carregar os testemunhos agora.</div>'; console.log(e); }
+}
+
+async function saveTestimony(){
+  const text=document.getElementById('testimonyText')?.value.trim();
+  const shared=!!document.getElementById('testimonyShared')?.checked;
+  if(!text){ alert('Escreva seu testemunho antes de publicar.'); return; }
+  if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
+  try{
+    await ensureParticipant();
+    const {error}=await supabaseClient.from('testemunhos').insert({participante_id:currentParticipantId,texto:text,compartilhado:shared});
+    if(error) throw error;
+    document.getElementById('testimonyText').value='';
+    alert('Testemunho publicado. ❤️');
+    await loadTestimonies(); go('testimonies');
+  }catch(e){ alert('Não foi possível publicar o testemunho: '+(e.message||e)); }
+}
+
+async function saveReflectionAndContinue(){
+  if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
+  try{
+    await ensureParticipant();
+    const choices=[...document.querySelectorAll('#reflectionChoices input:checked')].map(x=>x.value);
+    const text=choices.length ? choices.join('; ') : 'Momento de oração concluído.';
+    if(lastCompletedPrayerId){
+      const {error}=await supabaseClient.from('reflexoes').insert({oracao_id:lastCompletedPrayerId,participante_id:currentParticipantId,texto:text});
+      if(error) throw error;
+    }
+    go('testimonyNew');
+  }catch(e){ alert('A oração foi concluída, mas não consegui registrar a reflexão: '+(e.message||e)); }
+}
+
+async function loadRequests(){
+  const el=document.getElementById('requestsList'); if(!el) return;
+  if(!supabaseClient){ el.innerHTML='<div class="notice">Conecte o relógio ao banco para carregar os pedidos.</div>'; return; }
+  try{
+    const {data,error}=await supabaseClient.from('pedidos_oracao').select('id,participante_id,titulo,texto,compartilhado,criado_em').eq('ativo',true).eq('compartilhado',true).order('criado_em',{ascending:false}).limit(20);
+    if(error) throw error;
+    const rows=data||[];
+    if(!rows.length){ el.innerHTML='<div class="notice">Ainda não há pedidos compartilhados.</div>'; return; }
+    el.innerHTML=rows.map(r=>{
+      const title=String(r.titulo||'Pedido de oração').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      const text=String(r.texto||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      return '<div class="card"><b>'+title+'</b><p class="smalltext muted">“'+text+'”</p><div class="row"><span class="pill">Pedido ativo</span><button class="btn small" onclick="go(\'active\')">Orar</button></div></div>';
+    }).join('');
+  }catch(e){ el.innerHTML='<div class="notice">Não consegui carregar os pedidos agora.</div>'; console.log(e); }
+}
+
+async function saveRequest(){
+  const title=document.getElementById('requestTitle')?.value.trim();
+  const text=document.getElementById('requestText')?.value.trim();
+  const shared=!!document.getElementById('requestShared')?.checked;
+  if(!title || !text){ alert('Preencha o título e o pedido.'); return; }
+  if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
+  try{
+    await ensureParticipant();
+    const {error}=await supabaseClient.from('pedidos_oracao').insert({participante_id:currentParticipantId,titulo:title,texto:text,compartilhado:shared,ativo:true});
+    if(error) throw error;
+    document.getElementById('requestTitle').value=''; document.getElementById('requestText').value='';
+    alert('Pedido enviado. 🙏');
+    await loadRequests(); go('requests');
+  }catch(e){ alert('Não foi possível enviar o pedido: '+(e.message||e)); }
+}
+
+function makeTimes(){
+ const arr30=[];
+ const arr60=[];
+ for(let h=0;h<24;h++) for(let m of [0,30]){
+   const s=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+   const e30=new Date(2000,0,1,h,m+30);
+   const e60=new Date(2000,0,1,h,m+60);
+   const es30=String(e30.getHours()).padStart(2,'0')+':'+String(e30.getMinutes()).padStart(2,'0');
+   const es60=String(e60.getHours()).padStart(2,'0')+':'+String(e60.getMinutes()).padStart(2,'0');
+   arr30.push([s,es30]);
+   arr60.push([s,es60]);
+ }
+ const fill=(id,arr)=>{
+   const sel=document.getElementById(id);
+   sel.innerHTML='';
+   arr.forEach(x=>{let o=document.createElement('option');o.value=x.join(' – ');o.textContent=x.join(' – ');sel.appendChild(o)});
+ };
+ fill('time1',arr60);
+ fill('time2a',arr30);
+ fill('time2b',arr30);
+ document.getElementById('time1').value='21:00 – 22:00';
+ document.getElementById('time2a').value='08:00 – 08:30';
+ document.getElementById('time2b').value='21:00 – 21:30';
+}
+function timeToMinutes(t){
+  const [h,m]=t.split(':').map(Number);
+  return h*60+m;
+}
+function minutesToTime(total){
+  total=(total+1440)%1440;
+  const h=String(Math.floor(total/60)).padStart(2,'0');
+  const m=String(total%60).padStart(2,'0');
+  return h+':'+m;
+}
+function selectedPeriods(){
+  if(format==='1h'){
+    const [a,b]=document.getElementById('time1').value.split(' – ');
+    const start=timeToMinutes(a);
+    return [[minutesToTime(start),minutesToTime(start+30)],[minutesToTime(start+30),minutesToTime(start+60)]];
+  }
+  return [
+    document.getElementById('time2a').value.split(' – '),
+    document.getElementById('time2b').value.split(' – ')
+  ];
+}
+async function saveCommitmentToSupabase(){
+  if(!supabaseClient) return true;
+  try{
+    await ensureParticipant();
+    if(!currentParticipantId) throw new Error('Participante não encontrado.');
+    const tipo=format==='1h'?'1h':'30+30';
+    let commitment=null;
+    if(currentCommitmentId){
+      const found=await supabaseClient.from('compromissos').select('id').eq('id',currentCommitmentId).eq('participante_id',currentParticipantId).maybeSingle();
+      if(found.error) throw found.error;
+      commitment=found.data;
+    }
+    if(commitment){
+      const upd=await supabaseClient.from('compromissos').update({tipo, inicio_validade:'2026-09-14', fim_validade:'2026-10-23', ativo:true}).eq('id',commitment.id);
+      if(upd.error) throw upd.error;
+      const del=await supabaseClient.from('horarios').delete().eq('compromisso_id',commitment.id);
+      if(del.error) throw del.error;
+    }else{
+      const mine=await supabaseClient.from('compromissos').select('id').eq('participante_id',currentParticipantId).eq('ativo',true).limit(1).maybeSingle();
+      if(mine.error) throw mine.error;
+      if(mine.data?.id){
+        currentCommitmentId=mine.data.id;
+        const upd=await supabaseClient.from('compromissos').update({tipo, inicio_validade:'2026-09-14', fim_validade:'2026-10-23', ativo:true}).eq('id',currentCommitmentId);
+        if(upd.error) throw upd.error;
+        const del=await supabaseClient.from('horarios').delete().eq('compromisso_id',currentCommitmentId);
+        if(del.error) throw del.error;
+      }else{
+        const created=await supabaseClient.from('compromissos').insert({participante_id:currentParticipantId,tipo,inicio_validade:'2026-09-14',fim_validade:'2026-10-23',ativo:true}).select('id').single();
+        if(created.error) throw created.error;
+        currentCommitmentId=created.data.id;
+      }
+    }
+    const periods=selectedPeriods();
+    const rows=periods.map((x,i)=>({compromisso_id:currentCommitmentId,inicio:x[0],fim:x[1],ordem:i+1}));
+    const inserted=await supabaseClient.from('horarios').insert(rows);
+    if(inserted.error) throw inserted.error;
+    localStorage.setItem('na_compromisso_id',currentCommitmentId);
+    return true;
+  }catch(e){
+    console.error('Erro ao salvar compromisso:',e);
+    alert('O horário foi escolhido, mas não consegui gravá-lo no banco. '+(e.message||e));
+    return false;
+  }
+}
+async function confirmCommit(){
+ if(format==='1h') chosen=document.getElementById('time1').value;
+ else chosen=document.getElementById('time2a').value+' + '+document.getElementById('time2b').value;
+ const ok=await saveCommitmentToSupabase();
+ if(!ok) return;
+ ['commitmentCard','profileTime','commitTime','nextTime'].forEach(id=>{
+   const e=document.getElementById(id); if(e) e.textContent=chosen;
+ });
+ document.getElementById('homeName').textContent=userName.split(' ')[0];
+ document.getElementById('profileName').textContent=userName;
+ localStorage.setItem('na_chosen_time',chosen);
+ localStorage.setItem('na_format',format);
+ renderSlots();
+ go('confirm');
+}
+const slots=document.getElementById('slots');
+for(let h=0;h<24;h++) for(let m of [0,30]){
+ const s=String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
+ const e=new Date(2000,0,1,h,m+30); const es=String(e.getHours()).padStart(2,'0')+':'+String(e.getMinutes()).padStart(2,'0');
+ const div=document.createElement('button');div.type='button';div.className='slot free';div.dataset.start=s;div.dataset.end=es;
+ div.innerHTML='<b>'+s+'</b><br><span>livre</span>';
+ div.addEventListener('click',()=>handleSlotClick(s,es,div));
+ slots.appendChild(div);
+}
+function renderSlots(data=[]){
+  const mineStarts=new Set();
+  if(chosen){ chosen.split(' + ').forEach(part=>mineStarts.add(part.split(' – ')[0])); }
+  const busyByStart=new Map();
+  (data||[]).forEach(r=>{
+    const st=String(r.inicio||'').slice(0,5);
+    const count=Number(r.participantes_comprometidos||0);
+    if(st) busyByStart.set(st,count);
+  });
+  document.querySelectorAll('#slots .slot').forEach(div=>{
+    const st=div.dataset.start;
+    div.classList.remove('mine','busy','free');
+    if(mineStarts.has(st)){
+      div.classList.add('mine'); div.innerHTML='<b>'+st+'</b><br><span>Você</span>';
+    }else if(busyByStart.has(st)){
+      const count=busyByStart.get(st);
+      div.classList.add('busy'); div.innerHTML='<b>'+st+'</b><br><span>'+count+' '+(count===1?'pessoa':'pessoas')+'</span>';
+    }else{
+      div.classList.add('free'); div.innerHTML='<b>'+st+'</b><br><span>livre</span>';
+    }
+  });
+}
+async function handleSlotClick(start,end,div){
+  const mine=div.classList.contains('mine');
+  const busy=div.classList.contains('busy');
+  if(mine){ go('commitment'); return; }
+  if(busy){
+    alert('Este bloco já está ocupado por um ou mais compromissos. Você pode orar junto quando uma oração estiver ativa.');
+    return;
+  }
+  go('choose');
+  document.querySelector('input[name="format"][value="30+30"]')?.click();
+  const a=document.getElementById('time2a'), b=document.getElementById('time2b');
+  if(a) a.value=start+' – '+end;
+  if(b) b.value=start+' – '+end;
+}
+
+
+makeTimes();
+const savedFormat=document.querySelector('input[name="format"][value="'+format+'"]');
+if(savedFormat) savedFormat.checked=true;
+toggleFormat();
+if(chosen){ ['commitmentCard','profileTime','commitTime','nextTime'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=chosen;}); document.getElementById('homeName').textContent=userName.split(' ')[0]||'jovem'; document.getElementById('profileName').textContent=userName||'Meu espaço'; }
+renderSlots();
+initSupabase();
+if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js").catch(()=>{}); }
+loadNotificationPrefs();
+setTimeout(refreshLivePrayer,1200);
+setInterval(refreshLivePrayer,15000);
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault(); deferredInstallPrompt=e;
+  const c=document.getElementById('installCard'); if(c) c.style.display='block';
+});
+async function installApp(){
+  if(!deferredInstallPrompt){ alert('No iPhone, use Compartilhar → Adicionar à Tela de Início.'); return; }
+  deferredInstallPrompt.prompt();
+  try{ await deferredInstallPrompt.userChoice; }catch(e){}
+  deferredInstallPrompt=null;
+  const c=document.getElementById('installCard'); if(c) c.style.display='none';
+}
+window.addEventListener('appinstalled',()=>{
+  const c=document.getElementById('installCard'); if(c) c.style.display='none';
+});
+
+function checkPrayerReminders(){
+  if(!supabaseClient || !currentParticipantId || !chosen) return;
+  if(!('Notification' in window) || Notification.permission!=='granted') return;
+  const now=new Date();
+  const mins=now.getHours()*60+now.getMinutes();
+  const prefs=JSON.parse(localStorage.getItem('na_notification_prefs')||'{"notify10":true,"notifyStart":true}');
+  const periods=chosen.split(' + ').map(x=>x.split(' – ')[0]);
+  periods.forEach(t=>{
+    const [h,m]=t.split(':').map(Number), target=h*60+m;
+    let diff=(target-mins+1440)%1440;
+    const localDate=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');
+    const key=localDate+'_'+t;
+    if(prefs.notify10 && diff===10 && localStorage.getItem('na_notified10')!==key){
+      localStorage.setItem('na_notified10',key);
+      new Notification('Novo Amanhecer', {body:'Sua oração começa em 10 minutos. 🙏'});
+    }
+    if(prefs.notifyStart && diff===0 && localStorage.getItem('na_notifiedStart')!==key){
+      localStorage.setItem('na_notifiedStart',key);
+      new Notification('Hora de orar 🙏', {body:'Seu horário de oração começou.'});
+    }
+  });
+}
+setInterval(checkPrayerReminders,15000);
+
+let sec=1800;
+
+setInterval(()=>{const d=new Date();document.getElementById('clock').textContent=String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')},1000);
+</script>
+</body>
+</html>

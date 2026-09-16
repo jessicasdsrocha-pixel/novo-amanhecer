@@ -1,0 +1,10 @@
+{
+  "name": "Novo Amanhecer — Relógio de Oração",
+  "short_name": "Novo Amanhecer",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#f6f4ef",
+  "theme_color": "#2e302b",
+  "lang": "pt-BR",
+  "description": "Relógio de oração do grupo Novo Amanhecer — ADR4."
+}
