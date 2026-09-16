@@ -20,3 +20,4 @@ TESTE JÁ VALIDADO
 
 PRÓXIMA ETAPA
 - Proteger o painel da liderança com autenticação/controle de acesso real no Supabase antes de compartilhar a área administrativa.
+Atualização V9 - publicação no Vercel
