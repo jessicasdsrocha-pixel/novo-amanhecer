@@ -892,11 +892,34 @@ function renderSlots(data=[]){
 async function handleSlotClick(start,end,div){
   const mine=div.classList.contains('mine');
   const busy=div.classList.contains('busy');
-  if(mine){ go('commitment'); return; }
+
+  if(mine){
+    // Se o bloco próprio estiver acontecendo agora, abrir diretamente
+    // a tela de oração para permitir "Começar oração".
+    const now=new Date();
+    const nowMin=now.getHours()*60+now.getMinutes();
+    const startMin=timeToMinutes(start);
+    const endMin=timeToMinutes(end);
+    const activeNow = endMin > startMin
+      ? (nowMin >= startMin && nowMin < endMin)
+      : (nowMin >= startMin || nowMin < endMin);
+
+    if(activeNow){
+      prayerStartedAt=null;
+      showActiveState(false);
+      go('active');
+      return;
+    }
+
+    go('commitment');
+    return;
+  }
+
   if(busy){
     alert('Este bloco já está ocupado por um ou mais compromissos. Você pode orar junto quando uma oração estiver ativa.');
     return;
   }
+
   go('choose');
   document.querySelector('input[name="format"][value="30+30"]')?.click();
   const a=document.getElementById('time2a'), b=document.getElementById('time2b');

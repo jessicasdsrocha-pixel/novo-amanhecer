@@ -20,4 +20,8 @@ TESTE JÁ VALIDADO
 
 PRÓXIMA ETAPA
 - Proteger o painel da liderança com autenticação/controle de acesso real no Supabase antes de compartilhar a área administrativa.
-Atualização V9 - publicação no Vercel
+
+
+CORREÇÃO V10
+- Ao tocar no próprio bloco durante o horário ativo, a tela agora abre diretamente com o botão “Começar oração”.
+- Fora do horário ativo, o bloco continua levando aos detalhes do compromisso.
