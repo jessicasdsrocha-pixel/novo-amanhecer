@@ -62,7 +62,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 
 <section id="welcome" class="screen active">
   <div class="center" style="padding-top:55px">
-    <div class="eyebrow">40 dias • 14/09 → 23/10/2026</div>
+    <div class="eyebrow">21/09 → 26/10/2026</div>
     <h1>Um propósito.<br>Uma geração em oração.</h1>
     <p class="muted">Um relógio de oração para caminharmos juntos, cada um no seu horário, mas com o mesmo propósito.</p>
     <div class="card hero">
@@ -75,7 +75,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 <section id="intro" class="screen">
   <button class="link back" onclick="go('welcome')">← Voltar</button>
   <div class="eyebrow">Antes de começar</div><h1>Como vai funcionar?</h1>
-  <div class="card"><b>1. Escolha seu horário</b><p class="smalltext muted">Você assume um horário fixo de oração durante os 40 dias.</p></div>
+  <div class="card"><b>1. Escolha seu horário</b><p class="smalltext muted">Você assume um horário fixo de oração durante o período.</p></div>
   <div class="card"><b>2. Uma hora por dia</b><p class="smalltext muted">Pode ser 1 hora seguida ou dois períodos de 30 minutos em horários diferentes.</p></div>
   <div class="card"><b>3. Ore com a gente</b><p class="smalltext muted">Quando alguém estiver orando, o grupo poderá ver e entrar em “Orando junto”.</p></div>
   <div class="card"><b>4. Compartilhe o que Deus fez</b><p class="smalltext muted">Depois da oração, registre uma reflexão ou testemunho quando quiser.</p></div>
@@ -113,13 +113,13 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
     <div style="font-size:46px">✓</div><div class="eyebrow">Compromisso registrado</div>
     <h1>Você faz parte do relógio.</h1>
     <div class="card hero" id="commitmentCard"></div>
-    <p class="muted">De 14/09 a 23/10, seu horário será um pequeno altar diário de oração.</p>
+    <p class="muted">Seu horário será um pequeno altar diário de oração de 21/09 a 26/10.</p>
     <button class="btn" onclick="go('home')">Entrar no meu relógio</button>
   </div>
 </section>
 
 <section id="home" class="screen">
-  <div class="row"><div><div class="eyebrow">Hoje • Dia 1 de 40</div><h1>Olá, <span id="homeName">jovem</span> 👋</h1></div><span class="pill live">● ao vivo</span></div>
+  <div class="row"><div><div class="eyebrow">Hoje • Dia 1</div><h1>Olá, <span id="homeName">jovem</span> 👋</h1></div><span class="pill live">● ao vivo</span></div>
   <div class="card hero"><div class="eyebrow">Agora</div><div class="big" id="clock">19:30</div><div class="smalltext muted">2 pessoas estão orando</div><button id="joinCurrentBtn" class="btn" style="margin-top:12px" onclick="joinCurrentPrayer()">Estou orando junto</button></div>
   <div class="h2">Próximo compromisso</div>
   <div class="card"><div class="row"><div><b id="nextTime">21:00 – 22:00</b><div class="smalltext muted">Seu horário de oração</div></div><span class="pill busy">Hoje</span></div><hr><button class="link" onclick="go('commitment')">Ver meu compromisso →</button></div>
@@ -141,10 +141,10 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 
 <section id="focus" class="screen">
   <button class="link back" onclick="go('home')">← Início</button>
-  <div class="eyebrow">Dia 1 de 40</div><h1>Consagração e entrega</h1>
-  <div class="card hero"><div class="verse">“Ensina-nos a contar os nossos dias para que alcancemos corações sábios.”</div><p class="smalltext muted">Tema: começar estes 40 dias colocando tudo diante de Deus.</p></div>
+  <div class="eyebrow">Dia 1</div><h1>Consagração e entrega</h1>
+  <div class="card hero"><div class="verse">“Ensina-nos a contar os nossos dias para que alcancemos corações sábios.”</div><p class="smalltext muted">Tema: começar este período colocando tudo diante de Deus.</p></div>
   <div class="h2">Ore por...</div>
-  <div class="card stack smalltext"><div>• Cada participante e sua vida com Deus</div><div>• Disciplina e constância durante os 40 dias</div><div>• Um coração sensível à voz do Espírito Santo</div><div>• Famílias, igreja ADR4 e liderança</div></div>
+  <div class="card stack smalltext"><div>• Cada participante e sua vida com Deus</div><div>• Disciplina e constância durante o período</div><div>• Um coração sensível à voz do Espírito Santo</div><div>• Famílias, igreja ADR4 e liderança</div></div>
   <div class="notice">A cada dia, o foco poderá mudar. O conteúdo é administrado pelo painel da liderança.</div>
 </section>
 
@@ -210,7 +210,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
     <p class="smalltext muted" id="connectionStatus">Conectando ao relógio...</p>
   </div>
   <div class="card"><b>Participante deste aparelho</b><p class="smalltext muted">Quer cadastrar outra pessoa neste mesmo computador ou celular?</p><button class="btn outline" onclick="switchParticipant()">Trocar participante</button></div>
-  <div class="card hero"><div class="tag">Meu compromisso</div><h3 id="profileTime">21:00 – 22:00</h3><p class="smalltext muted">14/09 → 23/10 • todos os dias</p><div class="progress"><i id="journeyProgress"></i></div><p class="smalltext"><span id="journeyDays">0</span> de 40 dias completos • <span id="journeyPercent">0%</span></p></div>
+  <div class="card hero"><div class="tag">Meu compromisso</div><h3 id="profileTime">21:00 – 22:00</h3><p class="smalltext muted">21/09 → 26/10 • todos os dias</p><div class="progress"><i id="journeyProgress"></i></div><p class="smalltext"><span id="journeyDays">0</span> dias completos • <span id="journeyPercent">0%</span></p></div>
   <div class="grid"><div class="card"><div class="big" id="daysCompleted" style="font-size:25px">0</div><div class="smalltext muted">dias concluídos</div></div><div class="card"><div class="big" id="joinedCount" style="font-size:25px">0</div><div class="smalltext muted">orações junto</div></div></div>
   <div class="card"><b>Lembrete</b><p class="smalltext muted">Avisar 10 minutos antes do seu horário.</p><button id="notificationBtn" class="btn alt small" onclick="enableNotifications()">Ativar lembrete</button><p id="notificationStatus" class="smalltext muted"></p><button id="pushBtn" class="btn small hidden" onclick="enablePushNotifications()">Ativar notificações com o site fechado</button><p id="pushStatus" class="smalltext muted"></p></div>
   <div class="card" id="installCard" style="display:none"><b>Instalar no celular</b><p class="smalltext muted">Adicione o Novo Amanhecer à tela inicial para abrir como um aplicativo.</p><button id="installBtn" class="btn alt small" onclick="installApp()">Instalar aplicativo</button></div>
@@ -220,7 +220,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 <section id="commitment" class="screen">
   <button class="link back" onclick="go('profile')">← Meu espaço</button>
   <div class="eyebrow">Meu compromisso</div><h1>Meu horário de oração</h1>
-  <div class="card hero"><div class="tag">Período</div><h3>14/09/2026 → 23/10/2026</h3><p class="smalltext muted">40 dias • 1 hora por dia</p></div>
+  <div class="card hero"><div class="tag">Período</div><h3>21/09/2026 → 26/10/2026</h3></div>
   <div class="card"><b>Horário atual</b><h2 id="commitTime">21:00 – 22:00</h2><p class="smalltext muted">Esse horário se repete diariamente.</p><button class="btn alt small" onclick="go('choose')">Solicitar alteração</button></div>
   <div class="card"><b>Notificações</b><label class="check"><input id="notify10" type="checkbox" checked onchange="saveNotificationPrefs()"> 10 minutos antes</label><label class="check"><input id="notifyStart" type="checkbox" checked onchange="saveNotificationPrefs()"> Na hora de começar</label><label class="check"><input id="notifyReflection" type="checkbox" onchange="saveNotificationPrefs()"> Lembrete de reflexão</label><p class="smalltext muted">Você pode receber um aviso 10 minutos antes e outro na hora de começar. Com as notificações push ativadas, o aviso também pode chegar com o site fechado.</p></div>
 </section>
@@ -234,7 +234,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
     <div class="card"><div class="big" style="font-size:25px">12</div><div class="smalltext muted">pedidos ativos</div></div>
   </div>
   <div class="h2">Atalhos</div>
-  <div class="stack"><button class="btn" onclick="go('participants')">Participantes</button><button class="btn alt" onclick="go('themes')">Focos de oração</button><button class="btn alt" onclick="go('finale')">Resumo dos 40 dias</button></div>
+  <div class="stack"><button class="btn" onclick="go('participants')">Participantes</button><button class="btn alt" onclick="go('themes')">Focos de oração</button><button class="btn alt" onclick="go('finale')">Resumo do período</button></div>
 </section>
 
 <section id="participants" class="screen">
@@ -249,7 +249,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 
 <section id="themes" class="screen">
   <button class="link back" onclick="go('admin')">← Painel</button>
-  <div class="eyebrow">Administração</div><h1>Focos dos 40 dias</h1>
+  <div class="eyebrow">Administração</div><h1>Focos de oração</h1>
   <div class="timeline">
     <p><b>Dia 1 — Consagração e entrega</b><br><span class="smalltext muted">Começar colocando o propósito diante de Deus.</span></p>
     <p><b>Dia 2 — Famílias</b><br><span class="smalltext muted">Interceder pelas casas e relacionamentos.</span></p>
@@ -260,9 +260,9 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 </section>
 
 <section id="finale" class="screen">
-  <div class="center"><div class="eyebrow">Encerramento</div><h1>40 dias vividos em oração.</h1></div>
-  <div class="card hero"><div class="big">40</div><p class="muted">dias de propósito</p><hr><div class="row"><span>orações registradas</span><b>1.248</b></div><div class="row"><span>orações junto</span><b>327</b></div><div class="row"><span>testemunhos</span><b>54</b></div></div>
-  <div class="card"><b>O que fica?</b><p class="smalltext muted">Mais do que preencher horários, a proposta é terminar os 40 dias com uma geração que aprendeu a permanecer em oração.</p></div>
+  <div class="center"><div class="eyebrow">Encerramento</div><h1>Período vivido em oração.</h1></div>
+  <div class="card hero"><div class="big">∞</div><p class="muted">um período de propósito</p><hr><div class="row"><span>orações registradas</span><b>1.248</b></div><div class="row"><span>orações junto</span><b>327</b></div><div class="row"><span>testemunhos</span><b>54</b></div></div>
+  <div class="card"><b>O que fica?</b><p class="smalltext muted">Mais do que preencher horários, a proposta é viver este período com uma geração que aprendeu a permanecer em oração.</p></div>
   <button class="btn" onclick="go('home')">Voltar ao relógio</button>
 </section>
 
@@ -812,7 +812,7 @@ async function saveCommitmentToSupabase(){
       commitment=found.data;
     }
     if(commitment){
-      const upd=await supabaseClient.from('compromissos').update({tipo, inicio_validade:'2026-09-14', fim_validade:'2026-10-23', ativo:true}).eq('id',commitment.id);
+      const upd=await supabaseClient.from('compromissos').update({tipo, inicio_validade:'2026-09-21', fim_validade:'2026-10-26', ativo:true}).eq('id',commitment.id);
       if(upd.error) throw upd.error;
       const del=await supabaseClient.from('horarios').delete().eq('compromisso_id',commitment.id);
       if(del.error) throw del.error;
@@ -821,12 +821,12 @@ async function saveCommitmentToSupabase(){
       if(mine.error) throw mine.error;
       if(mine.data?.id){
         currentCommitmentId=mine.data.id;
-        const upd=await supabaseClient.from('compromissos').update({tipo, inicio_validade:'2026-09-14', fim_validade:'2026-10-23', ativo:true}).eq('id',currentCommitmentId);
+        const upd=await supabaseClient.from('compromissos').update({tipo, inicio_validade:'2026-09-21', fim_validade:'2026-10-26', ativo:true}).eq('id',currentCommitmentId);
         if(upd.error) throw upd.error;
         const del=await supabaseClient.from('horarios').delete().eq('compromisso_id',currentCommitmentId);
         if(del.error) throw del.error;
       }else{
-        const created=await supabaseClient.from('compromissos').insert({participante_id:currentParticipantId,tipo,inicio_validade:'2026-09-14',fim_validade:'2026-10-23',ativo:true}).select('id').single();
+        const created=await supabaseClient.from('compromissos').insert({participante_id:currentParticipantId,tipo,inicio_validade:'2026-09-21',fim_validade:'2026-10-26',ativo:true}).select('id').single();
         if(created.error) throw created.error;
         currentCommitmentId=created.data.id;
       }

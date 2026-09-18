@@ -1,27 +1,37 @@
-NOVO AMANHECER — V9 FINAL
+NOVO AMANHECER — V11
 
-Esta versão contém a interface/PWA atualizada e o código da função de push.
+CRONOGRAMA ATUALIZADO
+- Novo período: 21/09/2026 → 26/10/2026.
+- Mantidos os 40 dias de propósito.
+- As datas exibidas no site foram atualizadas.
+- As datas gravadas no Supabase ao assumir/editar um compromisso também foram atualizadas.
 
-ALTERAÇÕES DESTA VERSÃO
-- Removido o modo temporário ?teste=oracao.
-- Progresso de “Meu espaço” agora é calculado a partir das orações concluídas.
-- Barra e percentual da jornada agora são dinâmicos (0–40 dias).
-- Texto de notificações atualizado para refletir o Push já validado.
-- Mantido o PWA e o service worker.
+MANTIDO DA V10
+- Correção para o próprio horário abrir “Começar oração” quando estiver no horário ativo.
+- PWA e service worker.
+- Notificações locais e push já validadas.
+- Integração com Supabase.
 
-PUBLICAÇÃO
-1. Para o site, publique os arquivos da raiz (index.html, sw.js, manifest.webmanifest e icon-192.png) no mesmo projeto Vercel já usado.
-2. Não é necessário alterar o Cron/Edge Function para esta versão do frontend.
-3. A pasta supabase_push serve como cópia de segurança/referência do código e SQL.
+PUBLICAÇÃO NO GITHUB
+1. Entre no repositório novo-amanhecer.
+2. Clique em Add file → Upload files.
+3. Envie os 5 arquivos desta pasta, mantendo-os na raiz:
+   - index.html
+   - manifest.webmanifest
+   - sw.js
+   - icon-192.png
+   - LEIA-ME.txt
+4. Faça o commit.
+5. O Vercel conectado ao GitHub deverá criar uma nova publicação automaticamente.
 
-TESTE JÁ VALIDADO
-- Push 10 minutos antes: funcionando.
-- Push no horário exato: funcionando.
-
-PRÓXIMA ETAPA
-- Proteger o painel da liderança com autenticação/controle de acesso real no Supabase antes de compartilhar a área administrativa.
+IMPORTANTE
+- Não altere a Edge Function, o Cron ou os Secrets para esta atualização de datas.
+- Não compartilhe a chave privada VAPID.
 
 
-CORREÇÃO V10
-- Ao tocar no próprio bloco durante o horário ativo, a tela agora abre diretamente com o botão “Começar oração”.
-- Fora do horário ativo, o bloco continua levando aos detalhes do compromisso.
+ATUALIZAÇÃO V12
+Período ajustado para 21/09/2026 → 26/10/2026. As telas de período exibem somente as datas, sem descrição de quantidade de dias.
+
+
+ATUALIZAÇÃO V12
+Período ajustado para 21/09/2026 → 26/10/2026. As telas de período exibem somente as datas, sem indicação de quantidade de dias.
