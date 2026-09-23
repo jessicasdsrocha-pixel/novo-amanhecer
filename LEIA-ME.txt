@@ -1,37 +1,11 @@
-NOVO AMANHECER — V11
+NOVO AMANHECER — V14 DEFINITIVO
 
-CRONOGRAMA ATUALIZADO
-- Novo período: 21/09/2026 → 26/10/2026.
-- Mantidos os 40 dias de propósito.
-- As datas exibidas no site foram atualizadas.
-- As datas gravadas no Supabase ao assumir/editar um compromisso também foram atualizadas.
+Período interno: 21/09/2026 a 20/10/2026.
+Na interface pública, o período é mostrado apenas como “30 dias”.
 
-MANTIDO DA V10
-- Correção para o próprio horário abrir “Começar oração” quando estiver no horário ativo.
-- PWA e service worker.
-- Notificações locais e push já validadas.
-- Integração com Supabase.
-
-PUBLICAÇÃO NO GITHUB
-1. Entre no repositório novo-amanhecer.
-2. Clique em Add file → Upload files.
-3. Envie os 5 arquivos desta pasta, mantendo-os na raiz:
-   - index.html
-   - manifest.webmanifest
-   - sw.js
-   - icon-192.png
-   - LEIA-ME.txt
-4. Faça o commit.
-5. O Vercel conectado ao GitHub deverá criar uma nova publicação automaticamente.
-
-IMPORTANTE
-- Não altere a Edge Function, o Cron ou os Secrets para esta atualização de datas.
-- Não compartilhe a chave privada VAPID.
-
-
-ATUALIZAÇÃO V12
-Período ajustado para 21/09/2026 → 26/10/2026. As telas de período exibem somente as datas, sem descrição de quantidade de dias.
-
-
-ATUALIZAÇÃO V12
-Período ajustado para 21/09/2026 → 26/10/2026. As telas de período exibem somente as datas, sem indicação de quantidade de dias.
+Correção V14:
+- valida o participante salvo no aparelho contra o auth_user_id da sessão atual;
+- evita erro de RLS ao trocar de sessão/aparelho;
+- mantém as políticas de segurança do Supabase;
+- mantém as datas internas 21/09/2026 → 20/10/2026;
+- mantém PWA e notificações.
