@@ -1,11 +1,22 @@
-NOVO AMANHECER — V14 DEFINITIVO
+NOVO AMANHECER — V9 FINAL
 
-Período interno: 21/09/2026 a 20/10/2026.
-Na interface pública, o período é mostrado apenas como “30 dias”.
+Esta versão contém a interface/PWA atualizada e o código da função de push.
 
-Correção V14:
-- valida o participante salvo no aparelho contra o auth_user_id da sessão atual;
-- evita erro de RLS ao trocar de sessão/aparelho;
-- mantém as políticas de segurança do Supabase;
-- mantém as datas internas 21/09/2026 → 20/10/2026;
-- mantém PWA e notificações.
+ALTERAÇÕES DESTA VERSÃO
+- Removido o modo temporário ?teste=oracao.
+- Progresso de “Meu espaço” agora é calculado a partir das orações concluídas.
+- Barra e percentual da jornada agora são dinâmicos (0–40 dias).
+- Texto de notificações atualizado para refletir o Push já validado.
+- Mantido o PWA e o service worker.
+
+PUBLICAÇÃO
+1. Para o site, publique os arquivos da raiz (index.html, sw.js, manifest.webmanifest e icon-192.png) no mesmo projeto Vercel já usado.
+2. Não é necessário alterar o Cron/Edge Function para esta versão do frontend.
+3. A pasta supabase_push serve como cópia de segurança/referência do código e SQL.
+
+TESTE JÁ VALIDADO
+- Push 10 minutos antes: funcionando.
+- Push no horário exato: funcionando.
+
+PRÓXIMA ETAPA
+- Proteger o painel da liderança com autenticação/controle de acesso real no Supabase antes de compartilhar a área administrativa.

@@ -221,7 +221,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
   <button class="link back" onclick="go('profile')">← Meu espaço</button>
   <div class="eyebrow">Meu compromisso</div><h1>Meu horário de oração</h1>
   <div class="card hero"><div class="tag">Período</div><h3>30 dias</h3><p class="smalltext muted">1 hora por dia</p></div>
-  <div class="card"><b>Horário atual</b><h2 id="commitTime">21:00 – 22:00</h2><p class="smalltext muted">Esse horário se repete diariamente.</p><button class="btn alt small" onclick="go('choose')">Solicitar alteração</button></div>
+  <div class="card"><b>Horário atual</b><h2 id="commitTime">21:00 – 22:00</h2><p class="smalltext muted">Esse horário se repete diariamente.</p><div id="commitmentPrayerAction" class="notice" style="margin-top:12px">Seu horário de oração aparece aqui quando chegar a hora.</div><button class="btn" id="commitmentStartBtn" style="margin-top:10px;display:none" onclick="startMyScheduledPrayer()">Começar oração</button><button class="btn alt" id="commitmentActiveBtn" style="margin-top:10px;display:none" onclick="go('active')">Continuar oração</button><button class="btn alt small" style="margin-top:10px" onclick="go('choose')">Solicitar alteração</button></div>
   <div class="card"><b>Notificações</b><label class="check"><input id="notify10" type="checkbox" checked onchange="saveNotificationPrefs()"> 10 minutos antes</label><label class="check"><input id="notifyStart" type="checkbox" checked onchange="saveNotificationPrefs()"> Na hora de começar</label><label class="check"><input id="notifyReflection" type="checkbox" onchange="saveNotificationPrefs()"> Lembrete de reflexão</label><p class="smalltext muted">Você pode receber um aviso 10 minutos antes e outro na hora de começar. Com as notificações push ativadas, o aviso também pode chegar com o site fechado.</p></div>
 </section>
 
@@ -290,6 +290,7 @@ let currentPrayerId = null;
 let lastCompletedPrayerId = null;
 let prayerStartedAt = null;
 let prayerTimer = null;
+let currentPrayerDurationSeconds = 1800;
 
 function updateConnectionStatus(message, ok=false){
   const el=document.getElementById('connectionStatus');
@@ -519,6 +520,8 @@ function go(id){
  window.scrollTo({top:0,behavior:'smooth'});
  if(id==='testimonies') loadTestimonies();
  if(id==='requests') loadRequests();
+ if(id==='commitment'){ updateCommitmentPrayerAction(); }
+ if(id==='active') showActiveState(!!currentPrayerId);
 }
 
 async function ensureParticipant(){
@@ -668,9 +671,67 @@ function showActiveState(started){
   if(started && prayerStartedAt){
     const start=new Date(prayerStartedAt).getTime();
     if(prayerTimer) clearInterval(prayerTimer);
-    const tick=()=>{ const elapsed=Math.max(0,Math.floor((Date.now()-start)/1000)); const remaining=Math.max(0,1800-elapsed); const m=String(Math.floor(remaining/60)).padStart(2,'0'), ss=String(remaining%60).padStart(2,'0'); const t=document.getElementById('timer'); if(t)t.textContent=m+':'+ss; };
+    const tick=()=>{ const elapsed=Math.max(0,Math.floor((Date.now()-start)/1000)); const remaining=Math.max(0,currentPrayerDurationSeconds-elapsed); const m=String(Math.floor(remaining/60)).padStart(2,'0'), ss=String(remaining%60).padStart(2,'0'); const t=document.getElementById('timer'); if(t)t.textContent=m+':'+ss; if(remaining===0 && prayerTimer){ clearInterval(prayerTimer); prayerTimer=null; } };
     tick(); prayerTimer=setInterval(tick,1000);
   }
+}
+function timeToMinutesLocal(value){
+  const m=String(value||'').match(/^(\d{1,2}):(\d{2})$/);
+  return m ? Number(m[1])*60+Number(m[2]) : null;
+}
+function getScheduledPeriods(){
+  if(!chosen) return [];
+  return chosen.split(' + ').map(part=>{
+    const bits=part.split(' – ');
+    return {start:bits[0],end:bits[1]};
+  }).filter(x=>x.start&&x.end);
+}
+function getCurrentScheduledPeriod(){
+  const now=new Date();
+  const current=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+  return getScheduledPeriods().find(p=>{
+    const a=timeToMinutesLocal(p.start), b=timeToMinutesLocal(p.end);
+    return a!==null && b!==null && current>=a && current<b;
+  }) || null;
+}
+function commitmentIsValidToday(){
+  const today=new Date();
+  const iso=new Date(today.getFullYear(),today.getMonth(),today.getDate()).toISOString().slice(0,10);
+  return iso>='2026-09-21' && iso<='2026-10-20';
+}
+async function updateCommitmentPrayerAction(){
+  const box=document.getElementById('commitmentPrayerAction');
+  const startBtn=document.getElementById('commitmentStartBtn');
+  const activeBtn=document.getElementById('commitmentActiveBtn');
+  if(!box || !startBtn || !activeBtn) return;
+  startBtn.style.display='none'; activeBtn.style.display='none';
+  if(!chosen){ box.textContent='Você ainda não tem um horário de oração registrado.'; return; }
+  if(currentPrayerId){
+    box.textContent='Seu momento de oração está acontecendo agora.';
+    activeBtn.style.display='block';
+    return;
+  }
+  if(!commitmentIsValidToday()){
+    box.textContent='O período de oração já terminou.';
+    return;
+  }
+  const period=getCurrentScheduledPeriod();
+  if(period){
+    box.innerHTML='<b>Seu horário é agora! 🙏</b><br><span class="smalltext">Você pode começar sua oração neste momento.</span>';
+    startBtn.style.display='block';
+  }else{
+    const periods=getScheduledPeriods();
+    const now=new Date(); const current=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+    const next=periods.map(p=>({p,m:timeToMinutesLocal(p.start)})).filter(x=>x.m!==null && x.m>current).sort((a,b)=>a.m-b.m)[0];
+    if(next) box.textContent='Seu próximo horário começa às '+next.p.start+'.';
+    else box.textContent='Seu horário de hoje já terminou. Amanhã ele estará disponível novamente.';
+  }
+}
+async function startMyScheduledPrayer(){
+  const period=getCurrentScheduledPeriod();
+  if(!period){ alert('Seu horário de oração não está ativo neste momento.'); updateCommitmentPrayerAction(); return; }
+  await startPrayer(period);
+  updateCommitmentPrayerAction();
 }
 async function joinCurrentPrayer(){
   if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
@@ -681,7 +742,7 @@ async function joinCurrentPrayer(){
     await joinSpecificPrayer(live.oracao_id);
   }catch(e){ alert('Não foi possível entrar em oração junto: '+(e.message||e)); }
 }
-async function startPrayer(){
+async function startPrayer(scheduledPeriod=null){
   if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
   if(!currentParticipantId){
     const session=await supabaseClient.auth.getSession(); const uid=session.data?.session?.user?.id;
@@ -689,9 +750,16 @@ async function startPrayer(){
   }
   if(!currentParticipantId){ alert('Não encontrei seu cadastro. Volte e faça o cadastro novamente.'); return; }
   if(!currentCommitmentId){ alert('Seu compromisso ainda não foi registrado. Escolha seu horário primeiro.'); return; }
+  const period=scheduledPeriod || getCurrentScheduledPeriod();
+  if(!period){ alert('Seu horário de oração não está ativo neste momento.'); return; }
+  if(currentPrayerId){ go('active'); return; }
+  const startMin=timeToMinutesLocal(period.start), endMin=timeToMinutesLocal(period.end);
+  currentPrayerDurationSeconds=Math.max(60,Math.round((endMin-startMin)*60));
+  const {data:existing}=await supabaseClient.from('oracoes').select('id,inicio_real').eq('participante_id',currentParticipantId).eq('status','orando').limit(1).maybeSingle();
+  if(existing?.id){ currentPrayerId=existing.id; prayerStartedAt=existing.inicio_real; showActiveState(true); go('active'); return; }
   const {data,error}=await supabaseClient.from('oracoes').insert({participante_id:currentParticipantId,compromisso_id:currentCommitmentId,inicio_real:new Date().toISOString(),status:'orando'}).select('id,inicio_real').single();
   if(error){ alert('Não foi possível iniciar a oração agora: '+error.message); return; }
-  currentPrayerId=data.id; prayerStartedAt=data.inicio_real; showActiveState(true); await refreshLivePrayer();
+  currentPrayerId=data.id; prayerStartedAt=data.inicio_real; showActiveState(true); go('active'); await refreshLivePrayer();
 }
 async function finishPrayer(){
   if(!supabaseClient || !currentPrayerId){ go('finish'); return; }
@@ -943,6 +1011,7 @@ if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js").catc
 loadNotificationPrefs();
 setTimeout(refreshLivePrayer,1200);
 setInterval(refreshLivePrayer,15000);
+setInterval(()=>{ if(document.getElementById('commitment')?.classList.contains('active')) updateCommitmentPrayerAction(); },15000);
 let deferredInstallPrompt=null;
 window.addEventListener('beforeinstallprompt', (e)=>{
   e.preventDefault(); deferredInstallPrompt=e;
