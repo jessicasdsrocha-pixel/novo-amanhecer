@@ -20,3 +20,6 @@ TESTE JÁ VALIDADO
 
 PRÓXIMA ETAPA
 - Proteger o painel da liderança com autenticação/controle de acesso real no Supabase antes de compartilhar a área administrativa.
+
+
+V17: duração da oração passa a respeitar o bloco escolhido: 1 hora = 60 minutos; 30+30 = 30 minutos por bloco. A tela de conclusão mostra os minutos efetivamente registrados.

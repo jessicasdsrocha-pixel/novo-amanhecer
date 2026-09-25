@@ -152,7 +152,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
   <div class="center">
     <button class="link back" onclick="go('home')">← Voltar</button>
     <div class="eyebrow">Agora</div><h1>Você está orando</h1>
-    <div class="card hero"><div class="big" id="timer">30:00</div><div class="smalltext muted">Foco: Consagração e entrega</div><hr><span class="pill live" id="activeTogether">● 0 pessoas orando junto</span></div>
+    <div class="card hero"><div class="big" id="timer">60:00</div><div class="smalltext muted">Foco: Consagração e entrega</div><hr><span class="pill live" id="activeTogether">● 0 pessoas orando junto</span></div>
     <p class="muted">Seu momento pode ser simples: fale com Deus, agradeça, interceda e permaneça em Sua presença.</p>
     <div id="prayerStatus" class="success hidden"><b id="prayerStatusTitle">Oração iniciada.</b><p class="smalltext" id="prayerStatusText">Seu momento está aparecendo no relógio para o grupo.</p></div>
     <button class="btn" id="startPrayerBtn" onclick="startPrayer()">Começar oração</button>
@@ -162,7 +162,7 @@ hr{border:0;border-top:1px solid var(--line);margin:15px 0}
 
 <section id="finish" class="screen">
   <div class="center"><div style="font-size:44px">🙏</div><div class="eyebrow">Momento concluído</div><h1>Você esteve aqui.</h1></div>
-  <div class="success"><b>+ 30 min registrados</b><p class="smalltext">Seu momento de oração foi encerrado.</p></div>
+  <div class="success"><b id="completedPrayerMinutes">+ 0 min registrados</b><p class="smalltext">Seu momento de oração foi encerrado.</p></div>
   <div class="h2">Como foi seu momento?</div>
   <div class="card" id="reflectionChoices">
     <label class="check"><input type="checkbox" value="Senti paz"> Senti paz</label>
@@ -607,7 +607,20 @@ async function refreshLivePrayer(){
     const countEl=document.querySelector('#home .card.hero .smalltext.muted');
     if(countEl) countEl.textContent=live.length+' '+(live.length===1?'pessoa está':'pessoas estão')+' orando';
     const activeMine=live.find(r=>r.participante_id===currentParticipantId);
-    if(activeMine && !currentPrayerId){ currentPrayerId=activeMine.oracao_id; prayerStartedAt=activeMine.inicio_real; showActiveState(true); }
+    if(activeMine && !currentPrayerId){
+      currentPrayerId=activeMine.oracao_id;
+      prayerStartedAt=activeMine.inicio_real;
+      try{
+        const {data:pc}=await supabaseClient.from('oracoes').select('compromisso_id').eq('id',activeMine.oracao_id).maybeSingle();
+        if(pc?.compromisso_id){
+          const {data:hs}=await supabaseClient.from('horarios').select('inicio,fim').eq('compromisso_id',pc.compromisso_id).order('ordem');
+          const now=new Date(); const current=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+          const currentPeriod=(hs||[]).map(h=>({start:String(h.inicio).slice(0,5),end:String(h.fim).slice(0,5)})).find(p=>{const a=timeToMinutesLocal(p.start),b=timeToMinutesLocal(p.end);return a!==null&&b!==null&&current>=a&&current<b;});
+          if(currentPeriod){ currentPrayerDurationSeconds=Math.max(60,Math.round((timeToMinutesLocal(currentPeriod.end)-timeToMinutesLocal(currentPeriod.start))*60)); }
+        }
+      }catch(e){ console.log('Não foi possível recuperar a duração da oração ativa:',e.message||e); }
+      showActiveState(true);
+    }
     const togetherEl=document.getElementById('activeTogether');
     if(togetherEl && activeMine) togetherEl.textContent='● '+(activeMine.pessoas_orando_junto||0)+' pessoas orando junto';
     const joinCurrentBtn=document.getElementById('joinCurrentBtn');
@@ -730,7 +743,7 @@ async function updateCommitmentPrayerAction(){
 async function startMyScheduledPrayer(){
   const period=getCurrentScheduledPeriod();
   if(!period){ alert('Seu horário de oração não está ativo neste momento.'); updateCommitmentPrayerAction(); return; }
-  await startPrayer(period);
+  await startPrayer();
   updateCommitmentPrayerAction();
 }
 async function joinCurrentPrayer(){
@@ -742,6 +755,29 @@ async function joinCurrentPrayer(){
     await joinSpecificPrayer(live.oracao_id);
   }catch(e){ alert('Não foi possível entrar em oração junto: '+(e.message||e)); }
 }
+async function getCurrentScheduledPeriodFromDatabase(){
+  if(!supabaseClient || !currentCommitmentId) return null;
+  try{
+    const {data,error}=await supabaseClient.from('horarios').select('inicio,fim,ordem').eq('compromisso_id',currentCommitmentId).order('ordem');
+    if(error) throw error;
+    const periods=(data||[]).map(h=>({start:String(h.inicio).slice(0,5),end:String(h.fim).slice(0,5)}));
+    const now=new Date();
+    const current=now.getHours()*60+now.getMinutes()+now.getSeconds()/60;
+    return periods.find(p=>{
+      const a=timeToMinutesLocal(p.start), b=timeToMinutesLocal(p.end);
+      return a!==null && b!==null && current>=a && current<b;
+    }) || null;
+  }catch(e){
+    console.log('Não foi possível confirmar o horário no banco:',e.message||e);
+    return null;
+  }
+}
+
+function setCompletedPrayerMinutes(minutes){
+  const el=document.getElementById('completedPrayerMinutes');
+  if(el) el.textContent='+ '+Math.max(0,Math.round(minutes))+' min registrados';
+}
+
 async function startPrayer(scheduledPeriod=null){
   if(!supabaseClient){ alert('O relógio ainda não está conectado ao banco.'); return; }
   if(!currentParticipantId){
@@ -750,10 +786,11 @@ async function startPrayer(scheduledPeriod=null){
   }
   if(!currentParticipantId){ alert('Não encontrei seu cadastro. Volte e faça o cadastro novamente.'); return; }
   if(!currentCommitmentId){ alert('Seu compromisso ainda não foi registrado. Escolha seu horário primeiro.'); return; }
-  const period=scheduledPeriod || getCurrentScheduledPeriod();
+  const period=scheduledPeriod || await getCurrentScheduledPeriodFromDatabase() || getCurrentScheduledPeriod();
   if(!period){ alert('Seu horário de oração não está ativo neste momento.'); return; }
   if(currentPrayerId){ go('active'); return; }
   const startMin=timeToMinutesLocal(period.start), endMin=timeToMinutesLocal(period.end);
+  if(startMin===null || endMin===null || endMin<=startMin){ alert('Não consegui determinar a duração do seu horário de oração.'); return; }
   currentPrayerDurationSeconds=Math.max(60,Math.round((endMin-startMin)*60));
   const {data:existing}=await supabaseClient.from('oracoes').select('id,inicio_real').eq('participante_id',currentParticipantId).eq('status','orando').limit(1).maybeSingle();
   if(existing?.id){ currentPrayerId=existing.id; prayerStartedAt=existing.inicio_real; showActiveState(true); go('active'); return; }
@@ -764,9 +801,11 @@ async function startPrayer(scheduledPeriod=null){
 async function finishPrayer(){
   if(!supabaseClient || !currentPrayerId){ go('finish'); return; }
   const completedId=currentPrayerId;
+  const durationMinutes=Math.max(1,Math.round(currentPrayerDurationSeconds/60));
   const {error}=await supabaseClient.from('oracoes').update({status:'concluida',fim_real:new Date().toISOString()}).eq('id',completedId);
   if(error){ alert('A oração começou, mas não consegui encerrá-la no banco: '+error.message); return; }
   lastCompletedPrayerId=completedId;
+  setCompletedPrayerMinutes(durationMinutes);
   currentPrayerId=null; prayerStartedAt=null; if(prayerTimer) clearInterval(prayerTimer); showActiveState(false); go('finish'); await refreshLivePrayer();
 }
 
