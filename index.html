@@ -921,12 +921,9 @@ function renderSlots(data=[]){
 }
 async function handleSlotClick(start,end,div){
   const mine=div.classList.contains('mine');
-  const busy=div.classList.contains('busy');
   if(mine){ go('commitment'); return; }
-  if(busy){
-    alert('Este bloco já está ocupado por um ou mais compromissos. Você pode orar junto quando uma oração estiver ativa.');
-    return;
-  }
+  // Horários ocupados continuam disponíveis para novos compromissos.
+  // Várias pessoas podem assumir o mesmo bloco; a quantidade aparece no relógio.
   go('choose');
   document.querySelector('input[name="format"][value="30+30"]')?.click();
   const a=document.getElementById('time2a'), b=document.getElementById('time2b');
