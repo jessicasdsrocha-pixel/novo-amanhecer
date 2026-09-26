@@ -928,8 +928,9 @@ function minutesToTime(total){
 function selectedPeriods(){
   if(format==='1h'){
     const [a,b]=document.getElementById('time1').value.split(' – ');
-    const start=timeToMinutes(a);
-    return [[minutesToTime(start),minutesToTime(start+30)],[minutesToTime(start+30),minutesToTime(start+60)]];
+    // Um compromisso de 1 hora deve ser salvo como UM período contínuo de 60 minutos.
+    // Isso permite que o início da oração determine corretamente 60 minutos de duração.
+    return [[a,b]];
   }
   return [
     document.getElementById('time2a').value.split(' – '),
